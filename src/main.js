@@ -4,6 +4,8 @@ import { GITHUB_USER, PROFILE_URL, REPO_URL } from './config.js';
 import { AppError, fetchProfile, fetchStats, loadImage } from './github.js';
 import { toAscii, ramp, resetRamps, CELL_ASPECT } from './ascii/index.js';
 import { buildBlock } from './readme/compose.js';
+import { SECTIONS } from './readme/panel.js';
+import { deriveFields, mergeFields, customField } from './readme/fields.js';
 import { buildReadme, mdToHtml, fencedBody, afterFence } from './readme/markdown.js';
 
 const LANG_KEY = 'greenbar.lang';
@@ -35,6 +37,9 @@ const els = {
   previewNote: $('previewNote'),
   ghProfile: $('ghProfile'),
   ghRepo: $('ghRepo'),
+  detailsCard: $('detailsCard'),
+  fieldList: $('fieldList'),
+  addRow: $('addRow'),
 };
 
 els.ghProfile.textContent = '@' + GITHUB_USER;
@@ -54,6 +59,7 @@ const state = {
 let profile = null;
 let sourceImg = null;
 let stats = null;
+let fields = [];
 let lastStatus = null;
 
 const t = () => T[state.lang];
@@ -99,10 +105,81 @@ function render() {
     setStatus('stCors', 'error');
     return;
   }
-  const block = buildBlock(art, profile, state.layout, stats);
-  const md = buildReadme(block, profile, state.layout);
+  const block = buildBlock(art, profile, state.layout, fields);
+  const md = buildReadme(block, profile, state.layout, fields);
   els.output.value = md;
   paintPreview(block, md, dark);
+}
+
+/**
+ * One editable row per panel line: include it or not, retitle it, rewrite it,
+ * move it to another section, and drop the ones added by hand.
+ */
+function renderFields() {
+  const d = t();
+  els.detailsCard.classList.toggle('hidden', !profile);
+  els.fieldList.replaceChildren();
+
+  fields.forEach((f, i) => {
+    const row = document.createElement('div');
+    row.className = 'fieldrow' + (f.on ? '' : ' off');
+
+    const on = document.createElement('input');
+    on.type = 'checkbox';
+    on.checked = f.on;
+    on.addEventListener('change', () => {
+      f.on = on.checked;
+      row.classList.toggle('off', !f.on);
+      render();
+    });
+
+    const label = document.createElement('input');
+    label.type = 'text';
+    label.value = f.label;
+    label.placeholder = d.phLabel;
+    label.addEventListener('input', () => {
+      f.label = label.value;
+      render();
+    });
+
+    const value = document.createElement('input');
+    value.type = 'text';
+    value.value = f.value;
+    value.placeholder = d.phValue;
+    value.addEventListener('input', () => {
+      f.value = value.value;
+      f.edited = true;
+      render();
+    });
+
+    const section = document.createElement('select');
+    for (const key of SECTIONS) {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = d['sec' + key[0].toUpperCase() + key.slice(1)];
+      section.append(opt);
+    }
+    section.value = f.section;
+    section.addEventListener('change', () => {
+      f.section = section.value;
+      render();
+    });
+
+    const del = document.createElement('button');
+    del.className = 'rowdel';
+    del.textContent = '\u00d7';
+    del.title = d.removeRow;
+    del.setAttribute('aria-label', d.removeRow);
+    del.style.visibility = f.custom ? 'visible' : 'hidden';
+    del.addEventListener('click', () => {
+      fields.splice(i, 1);
+      renderFields();
+      render();
+    });
+
+    row.append(on, label, value, section, del);
+    els.fieldList.append(row);
+  });
 }
 
 function setView(view) {
@@ -161,6 +238,7 @@ function applyLang() {
     b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang));
   }
   if (lastStatus) setStatus(lastStatus.key, lastStatus.tone, lastStatus.arg);
+  renderFields();
   setView(state.view);
   syncHints();
 }
@@ -176,6 +254,7 @@ async function run() {
     return;
   }
 
+  const sameUser = profile?.login?.toLowerCase() === login.toLowerCase();
   els.fetchBtn.disabled = true;
   setStatus('stFetching');
   try {
@@ -187,6 +266,9 @@ async function run() {
     ]);
     sourceImg = img;
     stats = st;
+    const fresh = deriveFields(profile, stats);
+    fields = sameUser ? mergeFields(fresh, fields) : fresh;
+    renderFields();
     render();
     setStatus('stPrinted', 'ok', profile.name || profile.login);
   } catch (e) {
@@ -236,6 +318,12 @@ for (const tab of document.querySelectorAll('.tab')) {
   tab.addEventListener('click', () => setView(tab.dataset.view));
 }
 
+els.addRow.addEventListener('click', () => {
+  fields.push(customField());
+  renderFields();
+  els.fieldList.lastElementChild?.querySelector('input[type=text]')?.focus();
+});
+
 els.file.addEventListener('change', async (e) => {
   const f = e.target.files?.[0];
   if (!f) return;
@@ -245,6 +333,8 @@ els.file.addEventListener('change', async (e) => {
     if (!profile) {
       profile = { login: els.username.value.trim() || 'user' };
       stats = null;
+      fields = [];
+      renderFields();
     }
     render();
     setStatus('stPrinted', 'ok', f.name);

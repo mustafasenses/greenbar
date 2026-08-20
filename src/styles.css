@@ -194,3 +194,54 @@ input:focus-visible {
   color: var(--color-paper);
   border-bottom-color: var(--color-rule);
 }
+
+/* Detail row editor */
+.fieldrow {
+  display: grid;
+  grid-template-columns: auto 116px minmax(0, 1fr) 104px 22px;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.fieldrow input[type='checkbox'] {
+  accent-color: var(--color-ribbon);
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}
+
+.fieldrow input[type='text'],
+.fieldrow select {
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--color-ink);
+  min-width: 0;
+}
+
+.fieldrow.off input[type='text'],
+.fieldrow.off select {
+  opacity: 0.45;
+}
+
+.rowdel {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-rule);
+  transition: 0.12s;
+}
+
+.rowdel:hover { color: var(--color-ribbon); }
+
+@media (max-width: 640px) {
+  .fieldrow {
+    grid-template-columns: auto minmax(0, 1fr) 22px;
+    row-gap: 0.25rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #E4E1D2;
+  }
+  .fieldrow select { grid-column: 2 / 3; }
+}

@@ -2,22 +2,37 @@ import { cleanUrl } from './panel.js';
 
 const FENCE = '```';
 
-/** Line below the block, where links are still clickable. */
-export function linkLine(p) {
+const liveRow = (rows, id) => {
+  const r = rows.find((x) => x.id === id && x.on);
+  const v = r ? String(r.value).trim() : '';
+  return v || null;
+};
+
+/**
+ * Line below the block, where links are still clickable. It follows the row
+ * editor: a detail switched off up in the panel must not reappear down here.
+ */
+export function linkLine(p, rows = []) {
   const parts = [`[@${p.login}](https://github.com/${p.login})`];
-  if (p.blog) {
-    const u = /^https?:\/\//.test(p.blog) ? p.blog : 'https://' + p.blog;
-    parts.push(`[${cleanUrl(p.blog)}](${u})`);
+
+  const site = liveRow(rows, 'website');
+  if (site && /^[^\s]+\.[^\s]+$/.test(cleanUrl(site))) {
+    const u = /^https?:\/\//.test(site) ? site : 'https://' + site;
+    parts.push(`[${cleanUrl(site)}](${u})`);
   }
-  if (p.twitter_username) {
-    parts.push(`[@${p.twitter_username}](https://twitter.com/${p.twitter_username})`);
+
+  const twitter = liveRow(rows, 'twitter');
+  if (twitter && /^@?[A-Za-z0-9_]{1,15}$/.test(twitter)) {
+    const handle = twitter.replace(/^@/, '');
+    parts.push(`[@${handle}](https://twitter.com/${handle})`);
   }
+
   return parts.join(' &nbsp;·&nbsp; ');
 }
 
-export function buildReadme(block, p, layout) {
+export function buildReadme(block, p, layout, rows = []) {
   if (layout === 'ascii') return [FENCE, block.join('\n'), FENCE, ''].join('\n');
-  return [FENCE, block.join('\n'), FENCE, '', linkLine(p), ''].join('\n');
+  return [FENCE, block.join('\n'), FENCE, '', linkLine(p, rows), ''].join('\n');
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

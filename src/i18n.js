@@ -64,6 +64,18 @@ export const T = {
     noteGh: 'How the README will look on your profile. The links sit outside the code block, so they stay clickable.',
     previewEmpty: 'Enter a username and hit Print.',
 
+    details: 'Details',
+    detailsHint:
+      'These are the rows in the panel. Untick anything you would rather not publish, ' +
+      'rewrite a label or a value, or add rows of your own.',
+    addRow: 'Add row',
+    phLabel: 'Label',
+    phValue: 'Value',
+    secMain: 'Main',
+    secContact: 'Contact',
+    secStats: 'Stats',
+    removeRow: 'Remove row',
+
     copy: 'Copy',
     copied: 'Copied',
     download: 'Download',
@@ -150,6 +162,18 @@ export const T = {
     notePrint: 'GitHub kod bloğuyla aynı satır aralığı — burada ne görüyorsan orada da o duracak.',
     noteGh: 'README profilinde böyle görünecek. Linkler kod bloğunun dışında kaldığı için tıklanabilir.',
     previewEmpty: "Kullanıcı adını yaz ve Bas'a tıkla.",
+
+    details: 'Künye',
+    detailsHint:
+      'Paneldeki satırlar bunlar. Yayımlamak istemediklerinin işaretini kaldır, ' +
+      'etiketini ya da değerini değiştir, veya kendi satırlarını ekle.',
+    addRow: 'Satır ekle',
+    phLabel: 'Etiket',
+    phValue: 'Değer',
+    secMain: 'Genel',
+    secContact: 'İletişim',
+    secStats: 'İstatistik',
+    removeRow: 'Satırı sil',
 
     copy: 'Kopyala',
     copied: 'Kopyalandı',

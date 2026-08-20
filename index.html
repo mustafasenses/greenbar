@@ -183,6 +183,21 @@
             <p id="previewNote" class="text-[11px] mt-2 text-[#8E9884]"></p>
           </section>
 
+          <section id="detailsCard" class="bg-paper rounded-[2px] overflow-hidden hidden">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-rule gap-2">
+              <span data-i18n="details" class="font-display text-[10px] uppercase tracking-[0.28em] text-rule"></span>
+              <button
+                id="addRow"
+                data-i18n="addRow"
+                class="px-3 py-1.5 border border-ink text-ink text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-ink hover:text-paper transition-colors"
+              ></button>
+            </div>
+            <div class="px-4 py-3">
+              <p data-i18n="detailsHint" class="text-[11px] text-ink2 mb-3 leading-relaxed"></p>
+              <div id="fieldList" class="space-y-1.5"></div>
+            </div>
+          </section>
+
           <section class="bg-paper rounded-[2px] overflow-hidden">
             <div class="flex items-center justify-between px-4 py-2.5 border-b border-rule gap-2">
               <span class="font-display text-[10px] uppercase tracking-[0.28em] text-rule">README.md</span>

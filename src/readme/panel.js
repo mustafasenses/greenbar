@@ -3,28 +3,11 @@
 // Labels are fixed English on purpose: the generated README lives on a public
 // GitHub profile, so the interface language must not leak into it.
 
-const L = {
-  name: 'Name',
-  bio: 'Bio',
-  location: 'Location',
-  company: 'Company',
-  uptime: 'Uptime',
-  langs: 'Languages',
-  push: 'Last push',
-  status: 'Status',
-  hire: 'Open to work',
-  contact: 'Contact',
-  website: 'Website',
-  twitter: 'Twitter',
-  email: 'Email',
-  stats: 'GitHub Stats',
-  repos: 'Repos',
-  gists: 'Gists',
-  stars: 'Stars',
-  forks: 'Forks',
-  followers: 'Followers',
-  following: 'Following',
-};
+/** Section ids, in the order they are printed. */
+export const SECTIONS = ['main', 'contact', 'stats'];
+
+/** Printed section headers. 'main' rows sit directly under the login bar. */
+export const SECTION_TITLES = { contact: 'Contact', stats: 'GitHub Stats' };
 
 export const cleanUrl = (u) => String(u).replace(/^https?:\/\//, '').replace(/\/$/, '');
 
@@ -85,44 +68,31 @@ export function since(iso) {
   return parts.join(', ');
 }
 
+const usable = (r) =>
+  r.on && String(r.label).trim() !== '' && String(r.value).trim() !== '';
+
 /**
- * Panel lines. Missing fields are skipped and a section with nothing in it is
- * never opened.
- * @param {object} p       GitHub user object
- * @param {number} w       panel width in characters
- * @param {object|null} st repo statistics
+ * Render the panel from rows the user controls. A section with nothing left in
+ * it is never opened, so switching rows off cannot leave a stray header behind.
+ * @param {string} login
+ * @param {{section: string, label: string, value: string, on: boolean}[]} rows
+ * @param {number} w  panel width in characters
  */
-export function panelLines(p, w, st) {
-  const out = [];
-  const push = (label, value) => {
-    if (value === null || value === undefined || String(value).trim() === '') return;
-    out.push(...leader(label, String(value).replace(/\s+/g, ' ').trim(), w));
-  };
+export function panelLines(login, rows, w) {
+  const live = rows.filter(usable);
+  const out = [bar(`${login}@github`, w)];
 
-  out.push(bar(`${p.login}@github`, w));
-  push(L.name, p.name);
-  push(L.bio, p.bio);
-  push(L.location, p.location);
-  push(L.company, p.company ? String(p.company).replace(/^@/, '') : null);
-  if (p.created_at) push(L.uptime, since(p.created_at));
-  if (st?.langs?.length) push(L.langs, st.langs.join(', '));
-  if (st?.pushed) push(L.push, st.pushed);
-  if (p.hireable) push(L.status, L.hire);
-
-  const contact = [];
-  if (p.blog) contact.push([L.website, cleanUrl(p.blog)]);
-  if (p.twitter_username) contact.push([L.twitter, '@' + p.twitter_username]);
-  if (p.email) contact.push([L.email, p.email]);
-  if (contact.length) {
-    out.push('', bar(L.contact, w));
-    for (const [k, v] of contact) push(k, v);
+  for (const r of live.filter((x) => x.section === 'main')) {
+    out.push(...leader(r.label, String(r.value).replace(/\s+/g, ' ').trim(), w));
   }
-
-  if (typeof p.public_repos === 'number') {
-    out.push('', bar(L.stats, w));
-    push(L.repos, p.public_repos + (p.public_gists ? ` | ${L.gists}: ${p.public_gists}` : ''));
-    if (st?.stars != null) push(L.stars, st.stars + (st.forks ? ` | ${L.forks}: ${st.forks}` : ''));
-    push(L.followers, `${p.followers} | ${L.following}: ${p.following}`);
+  for (const section of SECTIONS) {
+    if (section === 'main') continue;
+    const list = live.filter((x) => x.section === section);
+    if (!list.length) continue;
+    out.push('', bar(SECTION_TITLES[section], w));
+    for (const r of list) {
+      out.push(...leader(r.label, String(r.value).replace(/\s+/g, ' ').trim(), w));
+    }
   }
   return out;
 }

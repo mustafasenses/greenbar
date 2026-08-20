@@ -38,6 +38,9 @@ Everything runs in the browser. No account, no token, no backend.
 - **Three layouts** — portrait and details side by side, stacked, or portrait only.
 - **Five character sets** — classic ramp, a detailed 60-glyph ramp, letters, digits, and
   half-block shading.
+- **You decide what gets published.** Every panel row is a checkbox: untick your location
+  or email and it disappears from the block — and from the links underneath it. Labels and
+  values are editable, and you can add rows of your own to any section.
 - **Two previews** — a printout view with the exact line height of a GitHub code block,
   and a GitHub view that renders the README the way your profile will.
 - **Light and dark** targets, plus crop, tone and contrast controls.
@@ -116,9 +119,11 @@ src/
     tone.js       levels, CLAHE, sharpening, brightness → ink
     index.js      character and half-block renderers
   readme/         characters → markdown
+    fields.js     profile → the editable row list behind the panel
     panel.js      neofetch-style detail panel (English only)
     compose.js    side-by-side and stacked assembly
     markdown.js   README output and preview rendering
+  config.js       GitHub handle used by the footer links
   github.js       profile and repository statistics
   i18n.js         interface copy, TR and EN
   main.js         state and DOM wiring
