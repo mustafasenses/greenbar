@@ -1,5 +1,6 @@
 import './styles.css';
 import { T, DEFAULT_LANG } from './i18n.js';
+import { GITHUB_USER, PROFILE_URL, REPO_URL } from './config.js';
 import { AppError, fetchProfile, fetchStats, loadImage } from './github.js';
 import { toAscii, ramp, resetRamps, CELL_ASPECT } from './ascii/index.js';
 import { buildBlock } from './readme/compose.js';
@@ -32,7 +33,13 @@ const els = {
   ghCode: $('ghCode'),
   ghFoot: $('ghFoot'),
   previewNote: $('previewNote'),
+  ghProfile: $('ghProfile'),
+  ghRepo: $('ghRepo'),
 };
+
+els.ghProfile.textContent = '@' + GITHUB_USER;
+els.ghProfile.href = PROFILE_URL;
+els.ghRepo.href = REPO_URL;
 
 const state = {
   layout: 'side',

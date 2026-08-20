@@ -71,6 +71,8 @@ export const T = {
     footnote:
       'Make a public repo named exactly like your username, put this README.md inside it, and ' +
       'GitHub will pin it to the top of your profile.',
+    builtBy: 'Built by',
+    source: 'Source on GitHub',
 
     stNoUser: 'Enter a username first.',
     stFetching: 'Fetching the profile…',
@@ -156,6 +158,8 @@ export const T = {
     footnote:
       'Kullanıcı adınla birebir aynı isimde public bir repo aç, bu README.md dosyasını içine koy; ' +
       'GitHub onu profilinin en üstüne sabitler.',
+    builtBy: 'Geliştirici:',
+    source: "GitHub'da kaynak kodu",
 
     stNoUser: 'Önce bir kullanıcı adı yaz.',
     stFetching: 'Profil alınıyor…',

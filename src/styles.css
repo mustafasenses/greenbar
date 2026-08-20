@@ -182,3 +182,15 @@ input:focus-visible {
 .gh-light { background: #fff; color: #1f2328; }
 .gh-light .gh-code { background: #f6f8fa; border: 1px solid #d1d9e0; }
 .gh-light .gh-md a { color: #0969da; }
+
+.footlink {
+  color: var(--color-rule);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: 0.12s;
+}
+
+.footlink:hover {
+  color: var(--color-paper);
+  border-bottom-color: var(--color-rule);
+}
