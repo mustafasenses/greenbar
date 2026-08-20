@@ -1,0 +1,184 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-desk: #2a2e27;
+  --color-paper: #f4f2e7;
+  --color-bar: #dce6d2;
+  --color-ink: #1c2118;
+  --color-ink2: #5c6553;
+  --color-ribbon: #b3372b;
+  --color-rule: #a9b49b;
+
+  --font-display: 'Space Mono', monospace;
+  --font-body: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+:root {
+  --fs: 9px;
+  --lh: 1.45;
+}
+
+body {
+  background: var(--color-desk);
+}
+
+.sprockets {
+  width: 26px;
+  flex: 0 0 26px;
+  background-color: var(--color-paper);
+  background-image: radial-gradient(circle at center, var(--color-desk) 0 4.5px, transparent 4.6px);
+  background-size: 26px 26px;
+  background-repeat: repeat-y;
+  background-position: center top;
+}
+
+/* Same line height as a GitHub code block, so the preview is literal. */
+.printout {
+  font-family: var(--font-body);
+  font-size: var(--fs);
+  line-height: var(--lh);
+  white-space: pre;
+}
+
+.greenbar {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-bar) 0,
+    var(--color-bar) calc(var(--fs) * var(--lh) * 6),
+    transparent calc(var(--fs) * var(--lh) * 6),
+    transparent calc(var(--fs) * var(--lh) * 12)
+  );
+}
+
+.printout-dark {
+  background: #0d1117;
+  color: #e6edf3;
+  background-image: none;
+}
+
+input[type='range'] {
+  accent-color: var(--color-ribbon);
+  width: 100%;
+}
+
+@keyframes feed {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.feeding {
+  animation: feed 620ms steps(40, end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feeding { animation: none; }
+}
+
+.field {
+  background: #fff;
+  border: 1px solid var(--color-rule);
+  color: var(--color-ink);
+  border-radius: 2px;
+}
+
+.field:focus-visible {
+  outline: 2px solid var(--color-ribbon);
+  outline-offset: 1px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-ribbon);
+  outline-offset: 2px;
+}
+
+.chip {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.45rem 0.3rem;
+  font-size: 11px;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--color-ink2);
+  transition: 0.12s;
+  white-space: nowrap;
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.chip-row {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.lang {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-ink2);
+  border-radius: 2px;
+  color: #8e9884;
+  background: transparent;
+  transition: 0.12s;
+}
+
+.lang[aria-pressed='true'] {
+  color: var(--color-paper);
+  border-color: var(--color-rule);
+}
+
+.tab {
+  font-family: var(--font-display);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--color-rule);
+  transition: 0.12s;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--color-ink);
+  border-color: var(--color-rule);
+  background: var(--color-bar);
+}
+
+/* Mimics GitHub's own README rendering. */
+.gh {
+  padding: 16px;
+  font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+.gh-code {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre;
+  overflow-x: auto;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 0;
+}
+
+.gh-md { margin-top: 14px; }
+.gh-md h3 { font-size: 17px; font-weight: 600; margin: 14px 0 6px; }
+.gh-md p { font-size: 13px; line-height: 1.6; margin: 6px 0; }
+.gh-md a { text-decoration: none; }
+.gh-md a:hover { text-decoration: underline; }
+
+.gh-dark { background: #0d1117; color: #e6edf3; }
+.gh-dark .gh-code { background: #151b23; border: 1px solid #3d444d; }
+.gh-dark .gh-md a { color: #4493f8; }
+
+.gh-light { background: #fff; color: #1f2328; }
+.gh-light .gh-code { background: #f6f8fa; border: 1px solid #d1d9e0; }
+.gh-light .gh-md a { color: #0969da; }
