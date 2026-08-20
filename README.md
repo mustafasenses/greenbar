@@ -2,6 +2,8 @@
 
 Turn a GitHub avatar into an ASCII portrait and a ready-to-paste profile README.
 
+**[Try it live → mustafasenses.dev/greenbar](https://mustafasenses.dev/greenbar/)**
+
 Type a username, and greenbar pulls the avatar and the public profile, renders the
 picture as monospace characters, and sets a neofetch-style detail panel next to it —
 all inside one fenced code block, so GitHub draws no table borders around it.
@@ -65,6 +67,9 @@ what makes most avatars come out as mush. greenbar does a few things differently
 
 ## Getting started
 
+The [live version](https://mustafasenses.dev/greenbar/) is the same build this repo
+produces. To run it yourself:
+
 ```bash
 npm install
 npm run dev
@@ -93,7 +98,11 @@ Two workflows live in `.github/workflows`:
   site and publishes `dist/` to GitHub Pages.
 
 To switch it on, go to *Settings → Pages* in the repository and set the source to
-**GitHub Actions**. The first push to `main` after that will publish the site.
+**GitHub Actions**. The first push to `main` after that will publish the site — which is
+how <https://mustafasenses.dev/greenbar/> is served.
+
+Assets are referenced relatively (`base: './'` in `vite.config.js`), so the build works
+from a subpath as well as from a domain root.
 
 ## Project structure
 
