@@ -50,6 +50,7 @@ export const T = {
     contrast: 'Contrast',
     contrastHint: 'Tones are balanced automatically. This nudges the result either way.',
 
+    or: 'Or',
     ownPhoto: 'Use your own photo',
 
     preview: 'Preview',
@@ -144,6 +145,7 @@ export const T = {
     contrast: 'Kontrast',
     contrastHint: 'Tonlar zaten otomatik dengeleniyor. Bu, sonucu bir yöne itmek için.',
 
+    or: 'Veya',
     ownPhoto: 'Kendi fotoğrafını kullan',
 
     preview: 'Önizleme',
