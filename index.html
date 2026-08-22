@@ -171,12 +171,20 @@
         </section>
 
         <section id="detailsCard" class="bg-paper rounded-[2px] overflow-hidden hidden">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-rule gap-2">
-            <span data-i18n="details" class="font-display text-[10px] uppercase tracking-[0.28em] text-rule"></span>
+          <div class="flex items-center justify-between px-4 py-2.5 gap-2">
+            <button id="detailsToggle" aria-expanded="false" aria-controls="detailsBody"
+              class="flex items-center gap-2 flex-1 text-left">
+              <svg id="detailsChevron" viewBox="0 0 16 16" width="10" height="10"
+                class="shrink-0 transition-transform -rotate-90">
+                <path d="M4 2l8 6-8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span data-i18n="details" class="font-display text-[10px] uppercase tracking-[0.28em] text-rule"></span>
+            </button>
             <button id="addRow" data-i18n="addRow"
               class="px-3 py-1.5 border border-ink text-ink text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-ink hover:text-paper transition-colors"></button>
           </div>
-          <div class="px-4 py-3">
+          <div id="detailsBody" class="px-4 py-3 border-t border-rule hidden">
             <p data-i18n="detailsHint" class="text-[11px] text-ink2 mb-3 leading-relaxed"></p>
             <div id="fieldList" class="space-y-1.5"></div>
           </div>

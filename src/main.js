@@ -38,6 +38,9 @@ const els = {
   ghProfile: $('ghProfile'),
   ghRepo: $('ghRepo'),
   detailsCard: $('detailsCard'),
+  detailsToggle: $('detailsToggle'),
+  detailsBody: $('detailsBody'),
+  detailsChevron: $('detailsChevron'),
   fieldList: $('fieldList'),
   addRow: $('addRow'),
 };
@@ -318,9 +321,19 @@ for (const tab of document.querySelectorAll('.tab')) {
   tab.addEventListener('click', () => setView(tab.dataset.view));
 }
 
+els.detailsToggle.addEventListener('click', () => {
+  const open = els.detailsToggle.getAttribute('aria-expanded') !== 'true';
+  els.detailsToggle.setAttribute('aria-expanded', String(open));
+  els.detailsBody.classList.toggle('hidden', !open);
+  els.detailsChevron.classList.toggle('-rotate-90', !open);
+});
+
 els.addRow.addEventListener('click', () => {
   fields.push(customField());
   renderFields();
+  els.detailsToggle.setAttribute('aria-expanded', 'true');
+  els.detailsBody.classList.remove('hidden');
+  els.detailsChevron.classList.remove('-rotate-90');
   els.fieldList.lastElementChild?.querySelector('input[type=text]')?.focus();
 });
 
