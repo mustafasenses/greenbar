@@ -53,6 +53,33 @@ export function flood(lum, cols, rows, level, tol) {
 }
 
 /**
+ * Size of the kept region reachable from the centre by 4-neighbour steps.
+ * Colour tells subject and backdrop apart even when they share a tone, so a
+ * grayscale photo is the case most likely to have the flood eat a tone-alike
+ * shoulder or sleeve out of the middle of the subject — that leaves the head
+ * stranded from stray, disconnected specks elsewhere in "keep". Comparing the
+ * centre-connected component against the total catches that split.
+ */
+function centreComponent(keep, cols, rows) {
+  const start = ((rows >> 1) * cols) + (cols >> 1);
+  if (!keep[start]) return 0;
+  const seen = new Uint8Array(cols * rows);
+  const stack = [start];
+  seen[start] = 1;
+  let n = 1;
+  while (stack.length) {
+    const i = stack.pop();
+    const x = i % cols;
+    const y = (i / cols) | 0;
+    if (x > 0 && keep[i - 1] && !seen[i - 1]) { seen[i - 1] = 1; stack.push(i - 1); n++; }
+    if (x < cols - 1 && keep[i + 1] && !seen[i + 1]) { seen[i + 1] = 1; stack.push(i + 1); n++; }
+    if (y > 0 && keep[i - cols] && !seen[i - cols]) { seen[i - cols] = 1; stack.push(i - cols); n++; }
+    if (y < rows - 1 && keep[i + cols] && !seen[i + cols]) { seen[i + cols] = 1; stack.push(i + cols); n++; }
+  }
+  return n;
+}
+
+/**
  * Auto mode only knocks out genuinely flat backdrops — great for logos, and
  * conservative enough not to eat into a photographed subject. Anything busier
  * falls back to a circle crop, which keeps the face framed.
@@ -68,7 +95,7 @@ export function buildMask(lum, cols, rows, mode) {
     let on = 0;
     for (let i = 0; i < keep.length; i++) on += keep[i];
     const frac = on / keep.length;
-    if (frac > 0.08 && frac < 0.95) return keep;
+    if (frac > 0.08 && frac < 0.95 && centreComponent(keep, cols, rows) > on * 0.85) return keep;
   }
   return ellipseMask(cols, rows);
 }
