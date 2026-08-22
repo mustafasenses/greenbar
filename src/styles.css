@@ -93,6 +93,16 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+button:not(:disabled),
+select,
+input[type='file']::file-selector-button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .chip {
   flex: 1 1 0;
   min-width: 0;
