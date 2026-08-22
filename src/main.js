@@ -51,9 +51,8 @@ els.ghRepo.href = REPO_URL;
 
 const state = {
   layout: 'side',
-  theme: 'dark',
   crop: 'auto',
-  tone: 'auto',
+  tone: 'true',
   style: 'classic',
   view: 'print',
   lang: DEFAULT_LANG,
@@ -78,7 +77,7 @@ function setStatus(key, tone, arg) {
 function asciiOptions() {
   return {
     cols: +els.width.value,
-    dark: state.theme === 'dark',
+    dark: true,
     crop: state.crop,
     tone: state.tone,
     style: state.style,
@@ -86,21 +85,18 @@ function asciiOptions() {
   };
 }
 
-function paintPreview(block, md, dark) {
+function paintPreview(block, md) {
   els.preview.textContent = block.join('\n');
-  els.preview.classList.toggle('printout-dark', dark);
   els.preview.classList.remove('feeding');
   void els.preview.offsetWidth;
   els.preview.classList.add('feeding');
 
   els.ghCode.textContent = fencedBody(md) || block.join('\n');
   els.ghFoot.innerHTML = mdToHtml(afterFence(md));
-  els.ghCard.className = 'gh ' + (dark ? 'gh-dark' : 'gh-light');
 }
 
 function render() {
   if (!sourceImg || !profile) return;
-  const dark = state.theme === 'dark';
   let art;
   try {
     art = toAscii(sourceImg, asciiOptions());
@@ -111,7 +107,7 @@ function render() {
   const block = buildBlock(art, profile, state.layout, fields);
   const md = buildReadme(block, profile, state.layout, fields);
   els.output.value = md;
-  paintPreview(block, md, dark);
+  paintPreview(block, md);
 }
 
 /**

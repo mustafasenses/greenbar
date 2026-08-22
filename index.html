@@ -98,19 +98,10 @@
         </div>
 
         <div>
-          <span data-i18n="theme" class="text-xs font-medium block mb-2"></span>
-          <div class="chip-row" role="group">
-            <button class="chip" data-opt="theme" data-val="dark" data-i18n="tDark" aria-pressed="true"></button>
-            <button class="chip" data-opt="theme" data-val="light" data-i18n="tLight" aria-pressed="false"></button>
-          </div>
-          <span data-i18n="hTheme" class="block text-[11px] text-ink2 mt-1.5"></span>
-        </div>
-
-        <div>
           <span data-i18n="tone" class="text-xs font-medium block mb-2"></span>
           <div class="chip-row" role="group">
-            <button class="chip" data-opt="tone" data-val="auto" data-i18n="nAuto" aria-pressed="true"></button>
-            <button class="chip" data-opt="tone" data-val="true" data-i18n="nTrue" aria-pressed="false"></button>
+            <button class="chip" data-opt="tone" data-val="auto" data-i18n="nAuto" aria-pressed="false"></button>
+            <button class="chip" data-opt="tone" data-val="true" data-i18n="nTrue" aria-pressed="true"></button>
             <button class="chip" data-opt="tone" data-val="invert" data-i18n="nInvert" aria-pressed="false"></button>
           </div>
           <span id="toneHint" class="block text-[11px] text-ink2 mt-1.5"></span>
@@ -155,7 +146,7 @@
               </div>
 
               <div id="viewPrint" class="overflow-x-auto">
-                <pre id="preview" class="printout greenbar px-4 py-4 min-h-[220px]"></pre>
+                <pre id="preview" class="printout greenbar px-4 py-4 min-h-[220px] printout-dark"></pre>
               </div>
 
               <div id="viewGh" class="hidden">

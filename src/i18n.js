@@ -27,11 +27,6 @@ export const T = {
     sDigits: 'Digits',
     sBlocks: 'Blocks',
 
-    theme: 'Theme',
-    tDark: 'Dark',
-    tLight: 'Light',
-    hTheme: 'Pick the GitHub theme you are aiming at. With Tone on Auto the portrait works in both.',
-
     crop: 'Crop',
     cAuto: 'Auto',
     cCircle: 'Circle',
@@ -125,11 +120,6 @@ export const T = {
     sLetters: 'Harf',
     sDigits: 'Rakam',
     sBlocks: 'Blok',
-
-    theme: 'Tema',
-    tDark: 'Koyu',
-    tLight: 'Açık',
-    hTheme: 'Hangi GitHub temasına göre bastığını seç. Ton "Oto" iken portre ikisinde de okunur.',
 
     crop: 'Kırpma',
     cAuto: 'Oto',
