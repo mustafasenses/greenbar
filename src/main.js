@@ -37,6 +37,7 @@ const els = {
   previewNote: $('previewNote'),
   ghProfile: $('ghProfile'),
   ghRepo: $('ghRepo'),
+  ghRepoFoot: $('ghRepoFoot'),
   detailsCard: $('detailsCard'),
   detailsToggle: $('detailsToggle'),
   detailsBody: $('detailsBody'),
@@ -48,6 +49,7 @@ const els = {
 els.ghProfile.textContent = '@' + GITHUB_USER;
 els.ghProfile.href = PROFILE_URL;
 els.ghRepo.href = REPO_URL;
+els.ghRepoFoot.href = REPO_URL;
 
 const state = {
   layout: 'side',
