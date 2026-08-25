@@ -24,12 +24,8 @@ const els = {
   cropHint: $('cropHint'),
   styleHint: $('styleHint'),
   file: $('file'),
-  preview: $('preview'),
-  output: $('output'),
   copyBtn: $('copyBtn'),
   dlBtn: $('dlBtn'),
-  viewPrint: $('viewPrint'),
-  viewGh: $('viewGh'),
   ghCard: $('ghCard'),
   ghCode: $('ghCode'),
   ghFoot: $('ghFoot'),
@@ -62,6 +58,7 @@ let sourceImg = null;
 let stats = null;
 let fields = [];
 let lastStatus = null;
+let currentMd = '';
 
 const t = () => T[state.lang];
 
@@ -84,11 +81,6 @@ function asciiOptions() {
 }
 
 function paintPreview(block, md) {
-  els.preview.textContent = block.join('\n');
-  els.preview.classList.remove('feeding');
-  void els.preview.offsetWidth;
-  els.preview.classList.add('feeding');
-
   els.ghCode.textContent = fencedBody(md) || block.join('\n');
   els.ghFoot.innerHTML = mdToHtml(afterFence(md));
 }
@@ -104,7 +96,7 @@ function render() {
   }
   const block = buildBlock(art, profile, state.layout, fields);
   const md = buildReadme(block, profile, state.layout, fields);
-  els.output.value = md;
+  currentMd = md;
   paintPreview(block, md);
 }
 
@@ -179,16 +171,6 @@ function renderFields() {
   });
 }
 
-function setView(view) {
-  state.view = view;
-  els.viewPrint.classList.toggle('hidden', view !== 'print');
-  els.viewGh.classList.toggle('hidden', view !== 'gh');
-  for (const tab of document.querySelectorAll('.tab')) {
-    tab.setAttribute('aria-selected', String(tab.dataset.view === view));
-  }
-  els.previewNote.textContent = view === 'print' ? t().notePrint : t().noteGh;
-}
-
 function syncHints() {
   // Side by side has to leave room for the panel, so the slider ceiling moves.
   const max = state.layout === 'side' ? 66 : 120;
@@ -226,14 +208,13 @@ function applyLang() {
   for (const el of document.querySelectorAll('[data-i18n-html]')) {
     el.innerHTML = d[el.dataset.i18nHtml];
   }
-  els.output.placeholder = d.outputPh;
-  if (!els.output.value) els.preview.textContent = d.previewEmpty;
+  els.previewNote.textContent = d.noteGh;
+  if (!currentMd) els.ghCode.textContent = d.previewEmpty;
   for (const b of document.querySelectorAll('.lang')) {
     b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang));
   }
   if (lastStatus) setStatus(lastStatus.key, lastStatus.tone, lastStatus.arg);
   renderFields();
-  setView(state.view);
   syncHints();
 }
 
@@ -308,10 +289,6 @@ for (const btn of document.querySelectorAll('.lang')) {
   });
 }
 
-for (const tab of document.querySelectorAll('.tab')) {
-  tab.addEventListener('click', () => setView(tab.dataset.view));
-}
-
 els.detailsToggle.addEventListener('click', () => {
   const open = els.detailsToggle.getAttribute('aria-expanded') !== 'true';
   els.detailsToggle.setAttribute('aria-expanded', String(open));
@@ -350,29 +327,33 @@ els.file.addEventListener('change', async (e) => {
 });
 
 els.copyBtn.addEventListener('click', async () => {
-  if (!els.output.value) {
+  if (!currentMd) {
     setStatus('stNeedReadme', 'error');
     return;
   }
   try {
-    await navigator.clipboard.writeText(els.output.value);
+    await navigator.clipboard.writeText(currentMd);
     els.copyBtn.textContent = t().copied;
     setTimeout(() => {
       els.copyBtn.textContent = t().copy;
     }, 1600);
   } catch {
-    els.output.select();
+    const range = document.createRange();
+    range.selectNodeContents(els.ghCode);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
     setStatus('stCopyFail', 'error');
   }
 });
 
 els.dlBtn.addEventListener('click', () => {
-  if (!els.output.value) {
+  if (!currentMd) {
     setStatus('stNeedReadme', 'error');
     return;
   }
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([els.output.value], { type: 'text/markdown;charset=utf-8' }));
+  a.href = URL.createObjectURL(new Blob([currentMd], { type: 'text/markdown;charset=utf-8' }));
   a.download = 'README.md';
   a.click();
   URL.revokeObjectURL(a.href);

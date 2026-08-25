@@ -147,21 +147,17 @@
             <div class="flex-1 min-w-0 bg-paper">
               <div class="px-4 py-2 border-b border-rule flex items-center justify-between gap-2">
                 <span data-i18n="preview" class="font-display text-[10px] uppercase tracking-[0.28em] text-rule"></span>
-                <div class="flex gap-1" role="tablist">
-                  <button class="tab" role="tab" aria-selected="true" data-view="print" data-i18n="vPrint"></button>
-                  <button class="tab" role="tab" aria-selected="false" data-view="gh" data-i18n="vGh"></button>
+                <div class="flex gap-2">
+                  <button id="copyBtn" data-i18n="copy"
+                    class="px-3 py-1.5 bg-ink text-paper text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-[#333a2e] transition-colors"></button>
+                  <button id="dlBtn" data-i18n="download"
+                    class="px-3 py-1.5 border border-ink text-ink text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-ink hover:text-paper transition-colors"></button>
                 </div>
               </div>
 
-              <div id="viewPrint" class="overflow-x-auto">
-                <pre id="preview" class="printout greenbar px-4 py-4 min-h-[220px] printout-dark"></pre>
-              </div>
-
-              <div id="viewGh" class="hidden">
-                <div id="ghCard" class="gh gh-dark">
-                  <pre id="ghCode" class="gh-code"></pre>
-                  <div id="ghFoot" class="gh-md"></div>
-                </div>
+              <div id="ghCard" class="gh gh-dark">
+                <pre id="ghCode" class="gh-code"></pre>
+                <div id="ghFoot" class="gh-md"></div>
               </div>
             </div>
             <div class="sprockets" aria-hidden="true"></div>
@@ -187,20 +183,6 @@
             <p data-i18n="detailsHint" class="text-[11px] text-ink2 mb-3 leading-relaxed"></p>
             <div id="fieldList" class="space-y-1.5"></div>
           </div>
-        </section>
-
-        <section class="bg-paper rounded-[2px] overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2.5 border-b border-rule gap-2">
-            <span class="font-display text-[10px] uppercase tracking-[0.28em] text-rule">README.md</span>
-            <div class="flex gap-2">
-              <button id="copyBtn" data-i18n="copy"
-                class="px-3 py-1.5 bg-ink text-paper text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-[#333a2e] transition-colors"></button>
-              <button id="dlBtn" data-i18n="download"
-                class="px-3 py-1.5 border border-ink text-ink text-[11px] font-display uppercase tracking-wider rounded-[2px] hover:bg-ink hover:text-paper transition-colors"></button>
-            </div>
-          </div>
-          <textarea id="output" readonly spellcheck="false"
-            class="w-full h-72 px-4 py-3 bg-paper text-[11px] leading-relaxed resize-y outline-none"></textarea>
         </section>
 
         <p data-i18n="footnote" class="text-[11px] leading-relaxed text-[#8E9884]"></p>

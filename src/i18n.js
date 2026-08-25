@@ -46,9 +46,6 @@ export const T = {
     ownPhoto: 'Use your own photo',
 
     preview: 'Preview',
-    vPrint: 'Printout',
-    vGh: 'GitHub',
-    notePrint: 'Same line height as a GitHub code block, so what you see here is what lands there.',
     noteGh: 'How the README will look on your profile. The links sit outside the code block, so they stay clickable.',
     previewEmpty: 'Enter a username and hit Print.',
 
@@ -67,7 +64,6 @@ export const T = {
     copy: 'Copy',
     copied: 'Copied',
     download: 'Download',
-    outputPh: 'Your README will show up here.',
     footnote:
       'Make a public repo named exactly like your username, put this README.md inside it, and ' +
       'GitHub will pin it to the top of your profile.',
@@ -133,9 +129,6 @@ export const T = {
     ownPhoto: 'Kendi fotoğrafını kullan',
 
     preview: 'Önizleme',
-    vPrint: 'Baskı',
-    vGh: 'GitHub',
-    notePrint: 'GitHub kod bloğuyla aynı satır aralığı — burada ne görüyorsan orada da o duracak.',
     noteGh: 'README profilinde böyle görünecek. Linkler kod bloğunun dışında kaldığı için tıklanabilir.',
     previewEmpty: "Kullanıcı adını yaz ve Bas'a tıkla.",
 
@@ -154,7 +147,6 @@ export const T = {
     copy: 'Kopyala',
     copied: 'Kopyalandı',
     download: 'İndir',
-    outputPh: 'Ürettiğin README burada görünecek.',
     footnote:
       'Kullanıcı adınla birebir aynı isimde public bir repo aç, bu README.md dosyasını içine koy; ' +
       'GitHub onu profilinin en üstüne sabitler.',

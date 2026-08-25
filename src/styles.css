@@ -3,7 +3,6 @@
 @theme {
   --color-desk: #2a2e27;
   --color-paper: #f4f2e7;
-  --color-bar: #dce6d2;
   --color-ink: #1c2118;
   --color-ink2: #5c6553;
   --color-ribbon: #b3372b;
@@ -11,11 +10,6 @@
 
   --font-display: 'Space Mono', monospace;
   --font-body: 'IBM Plex Mono', ui-monospace, monospace;
-}
-
-:root {
-  --fs: 9px;
-  --lh: 1.45;
 }
 
 body {
@@ -32,46 +26,9 @@ body {
   background-position: center top;
 }
 
-/* Same line height as a GitHub code block, so the preview is literal. */
-.printout {
-  font-family: var(--font-body);
-  font-size: var(--fs);
-  line-height: var(--lh);
-  white-space: pre;
-}
-
-.greenbar {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--color-bar) 0,
-    var(--color-bar) calc(var(--fs) * var(--lh) * 6),
-    transparent calc(var(--fs) * var(--lh) * 6),
-    transparent calc(var(--fs) * var(--lh) * 12)
-  );
-}
-
-.printout-dark {
-  background: #0d1117;
-  color: #e6edf3;
-  background-image: none;
-}
-
 input[type='range'] {
   accent-color: var(--color-ribbon);
   width: 100%;
-}
-
-@keyframes feed {
-  from { clip-path: inset(0 0 100% 0); }
-  to { clip-path: inset(0 0 0 0); }
-}
-
-.feeding {
-  animation: feed 620ms steps(40, end);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .feeding { animation: none; }
 }
 
 .field {
@@ -142,24 +99,6 @@ button:disabled {
 .lang[aria-pressed='true'] {
   color: var(--color-paper);
   border-color: var(--color-rule);
-}
-
-.tab {
-  font-family: var(--font-display);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  color: var(--color-rule);
-  transition: 0.12s;
-}
-
-.tab[aria-selected='true'] {
-  color: var(--color-ink);
-  border-color: var(--color-rule);
-  background: var(--color-bar);
 }
 
 /* Mimics GitHub's own README rendering. */
