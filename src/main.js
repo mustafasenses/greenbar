@@ -22,7 +22,6 @@ const els = {
   contrastVal: $('contrastVal'),
   layoutHint: $('layoutHint'),
   cropHint: $('cropHint'),
-  toneHint: $('toneHint'),
   styleHint: $('styleHint'),
   file: $('file'),
   preview: $('preview'),
@@ -54,9 +53,7 @@ els.ghRepoFoot.href = REPO_URL;
 const state = {
   layout: 'side',
   crop: 'auto',
-  tone: 'true',
   style: 'classic',
-  view: 'print',
   lang: DEFAULT_LANG,
 };
 
@@ -81,7 +78,6 @@ function asciiOptions() {
     cols: +els.width.value,
     dark: true,
     crop: state.crop,
-    tone: state.tone,
     style: state.style,
     contrast: +els.contrast.value,
   };
@@ -213,9 +209,6 @@ function syncHints() {
 
   els.cropHint.textContent =
     state.crop === 'auto' ? t().hAuto : state.crop === 'circle' ? t().hCircle : t().hSquare;
-
-  els.toneHint.textContent =
-    state.tone === 'auto' ? t().hTAuto : state.tone === 'true' ? t().hTTrue : t().hTInvert;
 
   els.styleHint.textContent =
     state.style === 'blocks'

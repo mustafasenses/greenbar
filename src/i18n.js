@@ -35,14 +35,6 @@ export const T = {
     hCircle: 'Good for photos — cuts away shoulders and clutter in the corners.',
     hSquare: 'Keeps the whole frame. Use it for logos and square artwork.',
 
-    tone: 'Tone',
-    nAuto: 'Auto',
-    nTrue: 'True',
-    nInvert: 'Invert',
-    hTAuto: 'Draws you in the heavy characters and leaves the background empty, however the photo is lit.',
-    hTTrue: 'Keeps the real tones — bright stays bright, dark stays dark.',
-    hTInvert: 'Swaps light and dark.',
-
     size: 'Size',
     hNarrow: 'Past 60, the details column starts to get tight.',
     hWide: 'This wide, the block will scroll sideways on phones.',
@@ -129,14 +121,6 @@ export const T = {
     hAuto: 'Düz zeminleri kendi siler, arka plan kalabalıksa daire keser.',
     hCircle: 'Fotoğraflar için: omuzları ve köşelerdeki dağınıklığı atar.',
     hSquare: 'Kareyi olduğu gibi bırakır. Logolar ve kare görseller için.',
-
-    tone: 'Ton',
-    nAuto: 'Oto',
-    nTrue: 'Doğru',
-    nInvert: 'Ters',
-    hTAuto: 'Fotoğrafın ışığı ne yöne olursa olsun seni koyu karakterlerle çizer, arka planı boş bırakır.',
-    hTTrue: 'Gerçek tonları korur — aydınlık aydınlık, koyu koyu kalır.',
-    hTInvert: 'Aydınlıkla koyuyu yer değiştirir.',
 
     size: 'Boyut',
     hNarrow: "60'ın üstünde künye sütunu daralmaya başlıyor.",

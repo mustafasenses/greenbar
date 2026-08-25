@@ -150,8 +150,7 @@ export function unsharp(v, cols, rows, amount) {
 
 /**
  * sample -> mask -> stretch -> local equalise -> smooth -> sharpen -> contrast.
- * @returns {{v: Float32Array, mask: Uint8Array, base: Float32Array}}
- *   base is the pre-CLAHE brightness, kept for the polarity decision.
+ * @returns {{v: Float32Array, mask: Uint8Array}}
  */
 export function tonemap(img, cols, rows, { crop, contrast }) {
   const raw = sampleGrid(img, cols, rows);
@@ -161,10 +160,6 @@ export function tonemap(img, cols, rows, { crop, contrast }) {
   const span = hi - lo || 1;
   let v = new Float32Array(raw.length);
   for (let i = 0; i < raw.length; i++) v[i] = clamp01((raw[i] - lo) / span);
-
-  // Figure/ground survives only here: CLAHE pulls every tile towards a 0.5
-  // mean, after which "is the subject or the backdrop brighter" has no answer.
-  const base = v.slice();
 
   const tx = Math.max(2, Math.min(6, Math.round(cols / 16)));
   const ty = Math.max(2, Math.min(5, Math.round(rows / 7)));
@@ -176,43 +171,13 @@ export function tonemap(img, cols, rows, { crop, contrast }) {
 
   const k = contrast / 100;
   for (let i = 0; i < v.length; i++) v[i] = clamp01((clamp01(v[i]) - 0.5) * k + 0.5);
-  return { v, mask, base };
+  return { v, mask };
 }
 
-/**
- * Brightness to ink, 0 = blank cell, 1 = densest glyph.
- *
- * Auto keeps the subject dense and the backdrop empty whichever way the photo
- * runs; a dark portrait against a bright wall otherwise reads as a hole.
- */
-export function inkGrid(v, base, mask, cols, rows, { dark, tone }) {
+/** Brightness to ink, 0 = blank cell, 1 = densest glyph. */
+export function inkGrid(v, mask, cols, rows, { dark }) {
   const ink = new Float32Array(v.length);
   for (let i = 0; i < v.length; i++) ink[i] = mask[i] ? (dark ? v[i] : 1 - v[i]) : 0;
-
-  let flip = tone === 'invert';
-  if (tone === 'auto') {
-    // Inner disc (subject) against the outer ring (near enough all backdrop);
-    // the transition band between them is left out of both.
-    const cx = (cols - 1) / 2;
-    const cy = (rows - 1) / 2;
-    let ci = 0, cn = 0, bi = 0, bn = 0, bAll = 0;
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        const i = y * cols + x;
-        const dx = (x - cx) / (cols / 2);
-        const dy = (y - cy) / (rows / 2);
-        const d2 = dx * dx + dy * dy;
-        if (d2 >= 0.64) bAll++;
-        if (!mask[i]) continue;
-        const b = dark ? base[i] : 1 - base[i];
-        if (d2 <= 0.25) { ci += b; cn++; }
-        else if (d2 >= 0.64) { bi += b; bn++; }
-      }
-    }
-    // Nothing to compare against once the backdrop has been masked away.
-    if (cn && bn && bn > bAll * 0.3) flip = bi / bn > ci / cn + 0.04;
-  }
-  if (flip) for (let i = 0; i < v.length; i++) if (mask[i]) ink[i] = 1 - ink[i];
 
   // If a good share of the frame is already near-inkless it is backdrop;
   // pulling the black point up to it drops that area to blank so the portrait
