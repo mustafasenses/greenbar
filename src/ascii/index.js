@@ -60,7 +60,7 @@ function renderChars(img, cols, rows, opts) {
  * @param {boolean} opts.dark      target GitHub theme
  * @param {'auto'|'circle'|'square'} opts.crop
  * @param {string} opts.style      key of CHARSETS
- * @param {number} opts.contrast   50..200
+ * @param {number} opts.contrast   100..300
  * @returns {string[]}
  */
 export function toAscii(img, opts) {
