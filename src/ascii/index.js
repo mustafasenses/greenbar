@@ -21,8 +21,8 @@ function trim(lines) {
  * vertical resolution for the same line count.
  */
 function renderBlocks(img, cols, rows, opts) {
-  const { v, mask } = tonemap(img, cols, rows * 2, opts);
-  const ink = inkGrid(v, mask, cols, rows * 2, opts);
+  const { v, mask, cutout } = tonemap(img, cols, rows * 2, opts);
+  const ink = inkGrid(v, mask, cols, rows * 2, { ...opts, cutout });
   const lines = [];
   for (let y = 0; y < rows; y++) {
     let row = '';
@@ -38,8 +38,8 @@ function renderBlocks(img, cols, rows, opts) {
 }
 
 function renderChars(img, cols, rows, opts) {
-  const { v, mask } = tonemap(img, cols, rows, opts);
-  const ink = inkGrid(v, mask, cols, rows, opts);
+  const { v, mask, cutout } = tonemap(img, cols, rows, opts);
+  const ink = inkGrid(v, mask, cols, rows, { ...opts, cutout });
   const r = ramp(opts.style, CELL_ASPECT);
   const lines = [];
   for (let y = 0; y < rows; y++) {

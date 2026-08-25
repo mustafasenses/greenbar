@@ -150,34 +150,44 @@ export function unsharp(v, cols, rows, amount) {
 
 /**
  * sample -> mask -> stretch -> local equalise -> smooth -> sharpen -> contrast.
- * @returns {{v: Float32Array, mask: Uint8Array}}
+ * @returns {{v: Float32Array, mask: Uint8Array, cutout: boolean}}
  */
 export function tonemap(img, cols, rows, { crop, contrast }) {
   const raw = sampleGrid(img, cols, rows);
-  const mask = buildMask(raw, cols, rows, crop);
+  const { mask, cutout } = buildMask(raw, cols, rows, crop);
 
   const { lo, hi } = levels(raw, mask);
   const span = hi - lo || 1;
   let v = new Float32Array(raw.length);
   for (let i = 0; i < raw.length; i++) v[i] = clamp01((raw[i] - lo) / span);
 
-  const tx = Math.max(2, Math.min(6, Math.round(cols / 16)));
-  const ty = Math.max(2, Math.min(5, Math.round(rows / 7)));
-  const eq = clahe(v, mask, cols, rows, tx, ty, 1.6);
-  // Deliberately a light touch: more local detail costs silhouette.
-  for (let i = 0; i < v.length; i++) v[i] = 0.74 * v[i] + 0.26 * eq[i];
+  // Fewer, larger tiles give each local histogram enough samples that a
+  // stray patch of noise or JPEG blockiness can't swing it on its own.
+  const tx = Math.max(2, Math.min(4, Math.round(cols / 22)));
+  const ty = Math.max(2, Math.min(4, Math.round(rows / 10)));
+  // Higher clip = less redistribution = the local curve stays closer to the
+  // real tones instead of chasing full equalisation, which is what was
+  // turning flat skin and backdrop into fake contours.
+  const eq = clahe(v, mask, cols, rows, tx, ty, 3.5);
+  // Deliberately a light touch: more local detail costs fidelity to the source.
+  for (let i = 0; i < v.length; i++) v[i] = 0.85 * v[i] + 0.15 * eq[i];
 
-  v = unsharp(smooth(v, cols, rows, 0.35), cols, rows, 0.45);
+  v = unsharp(smooth(v, cols, rows, 0.35), cols, rows, 0.25);
 
   const k = contrast / 100;
   for (let i = 0; i < v.length; i++) v[i] = clamp01((clamp01(v[i]) - 0.5) * k + 0.5);
-  return { v, mask };
+  return { v, mask, cutout };
 }
 
 /** Brightness to ink, 0 = blank cell, 1 = densest glyph. */
-export function inkGrid(v, mask, cols, rows, { dark }) {
+export function inkGrid(v, mask, cols, rows, { dark, cutout }) {
   const ink = new Float32Array(v.length);
   for (let i = 0; i < v.length; i++) ink[i] = mask[i] ? (dark ? v[i] : 1 - v[i]) : 0;
+  // Only a genuine flat-backdrop cutout guarantees the darkest cells are
+  // background rather than a subject's own shadow — for anything else (a
+  // photographed backdrop kept under a circle crop, say) this same pull would
+  // crush real midtones to black instead of floating the portrait.
+  if (!cutout) return ink;
 
   // If a good share of the frame is already near-inkless it is backdrop;
   // pulling the black point up to it drops that area to blank so the portrait

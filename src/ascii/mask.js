@@ -83,11 +83,18 @@ function centreComponent(keep, cols, rows) {
  * Auto mode only knocks out genuinely flat backdrops — great for logos, and
  * conservative enough not to eat into a photographed subject. Anything busier
  * falls back to a circle crop, which keeps the face framed.
+ *
+ * `cutout` tells the caller whether the flood actually isolated the subject
+ * from a flat backdrop (true) versus falling back to an unconditional circle
+ * that still holds real background pixels (false). Tone mapping only trusts
+ * "the darkest cells are background" when cutout is true — otherwise a mottled
+ * photo backdrop gets read as backdrop and crushed to black.
  * @param {'auto'|'circle'|'square'} mode
+ * @returns {{mask: Uint8Array, cutout: boolean}}
  */
 export function buildMask(lum, cols, rows, mode) {
-  if (mode === 'square') return new Uint8Array(cols * rows).fill(1);
-  if (mode === 'circle') return ellipseMask(cols, rows);
+  if (mode === 'square') return { mask: new Uint8Array(cols * rows).fill(1), cutout: false };
+  if (mode === 'circle') return { mask: ellipseMask(cols, rows), cutout: false };
 
   const b = borderStats(lum, cols, rows);
   if (b.sd < 0.055) {
@@ -95,7 +102,9 @@ export function buildMask(lum, cols, rows, mode) {
     let on = 0;
     for (let i = 0; i < keep.length; i++) on += keep[i];
     const frac = on / keep.length;
-    if (frac > 0.08 && frac < 0.95 && centreComponent(keep, cols, rows) > on * 0.85) return keep;
+    if (frac > 0.08 && frac < 0.95 && centreComponent(keep, cols, rows) > on * 0.85) {
+      return { mask: keep, cutout: true };
+    }
   }
-  return ellipseMask(cols, rows);
+  return { mask: ellipseMask(cols, rows), cutout: false };
 }
