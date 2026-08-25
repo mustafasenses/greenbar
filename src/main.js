@@ -61,6 +61,30 @@ let lastStatus = null;
 let currentMd = '';
 
 const t = () => T[state.lang];
+const hasProfile = () => !!profile?.id;
+
+/**
+ * Side/stack layouts print "login@github" in the panel header, which only
+ * exists for a profile actually fetched from GitHub. A photo uploaded on its
+ * own has no login to put there, so it is locked to the ASCII-only layout.
+ */
+function updateLayoutLock() {
+  const locked = !hasProfile();
+  for (const b of document.querySelectorAll('.chip[data-opt="layout"]')) {
+    b.disabled = locked && b.dataset.val !== 'ascii';
+  }
+  if (locked && state.layout !== 'ascii') {
+    state.layout = 'ascii';
+    for (const b of document.querySelectorAll('.chip[data-opt="layout"]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.val === 'ascii'));
+    }
+  }
+}
+
+/** The ASCII-only layout never prints the panel, so the row editor for it is moot. */
+function updateDetailsVisibility() {
+  els.detailsCard.classList.toggle('hidden', !profile || state.layout === 'ascii');
+}
 
 function setStatus(key, tone, arg) {
   lastStatus = key ? { key, tone, arg } : null;
@@ -106,7 +130,7 @@ function render() {
  */
 function renderFields() {
   const d = t();
-  els.detailsCard.classList.toggle('hidden', !profile);
+  updateDetailsVisibility();
   els.fieldList.replaceChildren();
 
   fields.forEach((f, i) => {
@@ -172,6 +196,8 @@ function renderFields() {
 }
 
 function syncHints() {
+  updateDetailsVisibility();
+
   // Side by side has to leave room for the panel, so the slider ceiling moves.
   const max = state.layout === 'side' ? 66 : 120;
   els.width.max = String(max);
@@ -186,8 +212,9 @@ function syncHints() {
       : state.layout !== 'side' && w > 80 ? t().hWide
         : '';
 
-  els.layoutHint.textContent =
-    state.layout === 'side' ? t().hSide : state.layout === 'stack' ? t().hStack : t().hAscii;
+  els.layoutHint.textContent = !hasProfile()
+    ? t().hLoginNeeded
+    : state.layout === 'side' ? t().hSide : state.layout === 'stack' ? t().hStack : t().hAscii;
 
   els.cropHint.textContent =
     state.crop === 'auto' ? t().hAuto : state.crop === 'circle' ? t().hCircle : t().hSquare;
@@ -244,6 +271,8 @@ async function run() {
     const fresh = deriveFields(profile, stats);
     fields = sameUser ? mergeFields(fresh, fields) : fresh;
     renderFields();
+    updateLayoutLock();
+    syncHints();
     render();
     setStatus('stPrinted', 'ok', profile.name || profile.login);
   } catch (e) {
@@ -317,6 +346,8 @@ els.file.addEventListener('change', async (e) => {
       fields = [];
       renderFields();
     }
+    updateLayoutLock();
+    syncHints();
     render();
     setStatus('stPrinted', 'ok', f.name);
   } catch {
@@ -366,6 +397,7 @@ try {
   // ignore
 }
 
+updateLayoutLock();
 applyLang();
 
 // Glyph densities measured before the webfont lands describe the fallback font.

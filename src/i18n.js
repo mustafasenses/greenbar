@@ -19,6 +19,7 @@ export const T = {
     hSide: 'Portrait on the left, your details on the right, all in one code block.',
     hStack: 'Portrait on top, your details underneath it.',
     hAscii: 'Just the portrait — no details, no links.',
+    hLoginNeeded: 'A photo on its own has no GitHub username to head the panel with, so only ASCII is available. Print a username to unlock the other layouts.',
 
     charset: 'Character set',
     sClassic: 'Classic',
@@ -103,6 +104,7 @@ export const T = {
     hSide: 'Portre solda, künyen sağda; hepsi tek bir kod bloğunda.',
     hStack: 'Portre üstte, künyen hemen altında.',
     hAscii: 'Yalnızca portre — künye de yok, link de.',
+    hLoginNeeded: 'Yalnız başına bir fotoğrafın künyeye yazılacak bir GitHub kullanıcı adı yok, bu yüzden yalnızca ASCII kullanılabilir. Diğer düzenlerin kilidini açmak için bir kullanıcı adı bas.',
 
     charset: 'Karakter seti',
     sClassic: 'Klasik',
