@@ -68,6 +68,7 @@ export const T = {
       'Make a public repo named exactly like your username, put this README.md inside it, and ' +
       'GitHub will pin it to the top of your profile.',
     builtBy: 'Built by',
+    inspiredBy: '· Inspired by',
     source: 'Source on GitHub',
 
     stNoUser: 'Enter a username first.',
@@ -151,6 +152,7 @@ export const T = {
       'Kullanıcı adınla birebir aynı isimde public bir repo aç, bu README.md dosyasını içine koy; ' +
       'GitHub onu profilinin en üstüne sabitler.',
     builtBy: 'Geliştirici:',
+    inspiredBy: '· İlham alınan:',
     source: "GitHub'da kaynak kodu",
 
     stNoUser: 'Önce bir kullanıcı adı yaz.',
