@@ -49,7 +49,7 @@ els.ghRepoFoot.href = REPO_URL;
 const state = {
   layout: 'side',
   crop: 'auto',
-  style: 'classic',
+  style: 'blocks',
   lang: DEFAULT_LANG,
 };
 
