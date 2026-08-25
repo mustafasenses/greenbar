@@ -59,6 +59,7 @@ let stats = null;
 let fields = [];
 let lastStatus = null;
 let currentMd = '';
+let layoutLocked = false;
 
 const t = () => T[state.lang];
 const hasProfile = () => !!profile?.id;
@@ -66,18 +67,23 @@ const hasProfile = () => !!profile?.id;
 /**
  * Side/stack layouts print "login@github" in the panel header, which only
  * exists for a profile actually fetched from GitHub. A photo uploaded on its
- * own has no login to put there, so it is locked to the ASCII-only layout.
+ * own has no login to put there, so it is locked to the ASCII-only layout —
+ * but only once a photo actually exists; an empty page with no profile and no
+ * photo yet still defaults to side by side.
  */
 function updateLayoutLock() {
-  const locked = !hasProfile();
+  const wasLocked = layoutLocked;
+  layoutLocked = !!sourceImg && !hasProfile();
   for (const b of document.querySelectorAll('.chip[data-opt="layout"]')) {
-    b.disabled = locked && b.dataset.val !== 'ascii';
+    b.disabled = layoutLocked && b.dataset.val !== 'ascii';
   }
-  if (locked && state.layout !== 'ascii') {
+  if (layoutLocked) {
     state.layout = 'ascii';
-    for (const b of document.querySelectorAll('.chip[data-opt="layout"]')) {
-      b.setAttribute('aria-pressed', String(b.dataset.val === 'ascii'));
-    }
+  } else if (wasLocked) {
+    state.layout = 'side';
+  }
+  for (const b of document.querySelectorAll('.chip[data-opt="layout"]')) {
+    b.setAttribute('aria-pressed', String(b.dataset.val === state.layout));
   }
 }
 
